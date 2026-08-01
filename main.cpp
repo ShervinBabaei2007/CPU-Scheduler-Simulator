@@ -15,6 +15,7 @@ int MenuPage()
     const std::string Menu5 = "5. Exit";
 
     // Display the choices to the user
+    std::cout << std::endl;
     std::cout << "--- CPU Scheduler Menu ---" << std::endl;
     std::cout << Menu1 << std::endl;
     std::cout << Menu2 << std::endl;
@@ -109,12 +110,36 @@ void showData(int arrival[], int burst[], int n)
     }
 }
 
+// Function to sort FCFS
+void sortByArrival(int arrival[], int burst[], int n)
+{
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (arrival[i] > arrival[j])
+            {
+                // Going to swap the arrival times
+                int tempArival = arrival[i];
+                arrival[i] = arrival[j];
+                arrival[j] = tempArival;
+
+                // Going to swap the burst times so they stay with the same process
+                int tempBurst = burst[i];
+                burst[i] = burst[j];
+                burst[j] = tempBurst;
+            }
+        }
+    }
+}
+
 int main()
 {
     bool running = true;
 
-    int arrival[20] = {0};
-    int burst[20] = {0};
+    // Dynamic Memory Allocation (Heap)
+    int *arrival = new int[20];
+    int *burst = new int[20];
     int totalProcesses = 0;
 
     while (running)
@@ -140,6 +165,8 @@ int main()
                 std::cout << "Please add processes first!" << std::endl;
                 break;
             }
+
+            sortByArrival(arrival, burst, totalProcesses);
 
             std::cout << "\nPID\tArrival\tBurst\tFinish Time" << std::endl;
             std::cout << "---------------------------------" << std::endl;
@@ -181,5 +208,8 @@ int main()
         }
         }
     }
+    // Releasing dynamically allocated memory
+    delete[] arrival;
+    delete[] burst;
     return 0;
 }
